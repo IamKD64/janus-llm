@@ -9,7 +9,7 @@ data:
 
 model:
   name: Qwen/Qwen2.5-1.5B-Instruct
-  max_seq_len: 256
+  max_seq_len: 1024
 
 qlora:
   quantize: true        # 4-bit NF4 + double quant
