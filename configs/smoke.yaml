@@ -1,7 +1,7 @@
 # Fast end-to-end sanity check (a few minutes on a free Colab T4).
 seed: 42
 data: {dataset: PolyAI/banking77, train_size: 300, val_size: 50, eval_size: 100}
-model: {name: Qwen/Qwen2.5-0.5B-Instruct, max_seq_len: 256}
+model: {name: Qwen/Qwen2.5-0.5B-Instruct, max_seq_len: 1024}
 qlora: {quantize: true, r: 8, alpha: 16, dropout: 0.05, target_modules: all-linear}
 train: {output_dir: outputs/smoke, epochs: 1, batch_size: 8, grad_accum: 1, lr: 0.0002,
         warmup_ratio: 0.03, lr_scheduler: cosine, logging_steps: 5}
