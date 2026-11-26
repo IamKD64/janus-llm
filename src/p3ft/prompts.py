@@ -20,7 +20,12 @@ LABEL_SYSTEM = (
     "Classify the customer's message into exactly one of the intent labels below. "
     "Answer with the label only, no explanation.\n\nLabels:\n{labels}"
 )
-FT_SYSTEM = "Classify the banking customer message into its intent label."
+FT_SYSTEM = (
+    "You are an intent classifier for a retail bank's customer support. "
+    "Classify the customer's message into exactly one of the following "
+    "intent labels. Return only the exact label, with no explanation.\n\n"
+    "Labels:\n{labels}"
+)
 
 
 def select_shots(pool: list[Row], k: int, seed: int) -> list[Row]:
@@ -72,7 +77,11 @@ class PromptBuilder:
             system += "\n\nExamples:\n" + "\n".join(
                 f'"{r["text"]}" -> {r["label"]}' for r in examples
             )
-        self.system = FT_SYSTEM if strategy == "finetuned" else system
+        self.system = (
+            FT_SYSTEM.format(labels=label_block)
+            if strategy == "finetuned"
+            else system
+        )
 
     def messages(self, text: str) -> list[dict]:
         msgs = [{"role": "system", "content": self.system}]
