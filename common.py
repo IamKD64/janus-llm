@@ -1,4 +1,5 @@
 """Pure-Python helpers (no torch) so they can be unit-tested in CI."""
+
 import difflib
 
 TARGET_PREFIX = " "
@@ -11,8 +12,11 @@ def short_prompt(text: str) -> str:
 
 def long_prompt(text: str, labels: list[str]) -> str:
     """Prompt-engineered BASELINE: the model must be told the task and all 77 labels every time."""
-    return ("You are a banking intent classifier. Choose exactly ONE label from this list and output only the label.\n"
-            + "\n".join(labels) + f"\n\nQuery: {text}\nIntent:")
+    return (
+        "You are a banking intent classifier. Choose exactly ONE label from this list and output only the label.\n"
+        + "\n".join(labels)
+        + f"\n\nQuery: {text}\nIntent:"
+    )
 
 
 def parse_prediction(output: str, labels: list[str]) -> str | None:
@@ -24,4 +28,4 @@ def parse_prediction(output: str, labels: list[str]) -> str | None:
 
 
 def accuracy(preds: list[str | None], golds: list[str]) -> float:
-    return sum(p == g for p, g in zip(preds, golds)) / max(len(golds), 1)
+    return sum(p == g for p, g in zip(preds, golds, strict=False)) / max(len(golds), 1)

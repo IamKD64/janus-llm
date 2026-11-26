@@ -15,7 +15,7 @@ def test_parse_exact_and_fuzzy_and_none():
 
 def test_prompts_and_accuracy():
     assert short_prompt("hi").endswith("Intent:")
-    assert all(l in long_prompt("hi", LABELS) for l in LABELS)
+    assert all(label in long_prompt("hi", LABELS) for label in LABELS)
     assert len(long_prompt("hi", LABELS)) > len(short_prompt("hi"))
     assert accuracy(["a", None, "c"], ["a", "b", "c"]) == 2 / 3
 
