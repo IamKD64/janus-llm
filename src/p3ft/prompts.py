@@ -77,11 +77,7 @@ class PromptBuilder:
             system += "\n\nExamples:\n" + "\n".join(
                 f'"{r["text"]}" -> {r["label"]}' for r in examples
             )
-        self.system = (
-            FT_SYSTEM.format(labels=label_block)
-            if strategy == "finetuned"
-            else system
-        )
+        self.system = FT_SYSTEM.format(labels=label_block) if strategy == "finetuned" else system
 
     def messages(self, text: str) -> list[dict]:
         msgs = [{"role": "system", "content": self.system}]
