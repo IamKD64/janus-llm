@@ -1,0 +1,48 @@
+# Main experiment: Banking77 intent classification (77 classes).
+seed: 42
+
+data:
+  dataset: PolyAI/banking77
+  train_size: 3000      # fine-tuning examples (null = all ~9.8k)
+  val_size: 200         # carved out of train, used for eval_loss only
+  eval_size: 1000       # held-out test examples (null = all 3080)
+
+model:
+  name: Qwen/Qwen2.5-1.5B-Instruct
+  max_seq_len: 256
+
+qlora:
+  quantize: true        # 4-bit NF4 + double quant
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: all-linear
+
+train:
+  output_dir: outputs/qlora-banking77
+  epochs: 2
+  batch_size: 8
+  grad_accum: 2
+  lr: 0.0002
+  warmup_ratio: 0.03
+  lr_scheduler: cosine
+  logging_steps: 10
+
+eval:
+  batch_size: 8
+  max_new_tokens: 16
+  quantize_baseline: true   # same 4-bit base for baselines => apples-to-apples
+  strategies: [zero_shot, few_shot, one_per_label]
+  few_shot_k: 5
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment: p3-qlora-vs-prompting
+  registered_model: banking77-qlora-adapter
+
+results_dir: results
+
+quality_gate:
+  min_macro_f1_gain: 0.05   # fine-tune must beat the BEST prompt baseline by this much
+  min_accuracy: 0.80
+  max_invalid_rate: 0.02

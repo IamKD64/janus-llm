@@ -1,0 +1,13 @@
+# Fast end-to-end sanity check (a few minutes on a free Colab T4).
+seed: 42
+data: {dataset: PolyAI/banking77, train_size: 300, val_size: 50, eval_size: 100}
+model: {name: Qwen/Qwen2.5-0.5B-Instruct, max_seq_len: 256}
+qlora: {quantize: true, r: 8, alpha: 16, dropout: 0.05, target_modules: all-linear}
+train: {output_dir: outputs/smoke, epochs: 1, batch_size: 8, grad_accum: 1, lr: 0.0002,
+        warmup_ratio: 0.03, lr_scheduler: cosine, logging_steps: 5}
+eval: {batch_size: 8, max_new_tokens: 16, quantize_baseline: true,
+       strategies: [zero_shot, few_shot], few_shot_k: 5}
+mlflow: {tracking_uri: "sqlite:///mlflow_smoke.db", experiment: p3-smoke,
+         registered_model: banking77-smoke-adapter}
+results_dir: results_smoke
+quality_gate: {min_macro_f1_gain: 0.0, min_accuracy: 0.0, max_invalid_rate: 1.0}

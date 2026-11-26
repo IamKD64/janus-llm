@@ -1,0 +1,21 @@
+name: Train + evaluate (optional, needs a self-hosted GPU runner)
+
+# GitHub-hosted runners have no GPU. Use this only if you register a self-hosted runner
+# with the labels [self-hosted, gpu]. Otherwise run the pipeline on Colab/Kaggle (see README).
+on: workflow_dispatch
+
+jobs:
+  pipeline:
+    runs-on: [self-hosted, gpu]
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -e ".[train,dev]"
+      - run: make all
+      - run: make promote
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: |
+            results/*.json
+            results/REPORT.md
+            results/comparison.png

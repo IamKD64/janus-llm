@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+# experiment artifacts (large / machine-specific)
+outputs/
+mlruns/
+mlartifacts/
+mlflow*.db
+results*/predictions/
+results_smoke/
+# keep the small, reviewable result summaries in results/ (JSON, REPORT.md, PNG)
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Model checkpoints and weights
+*.safetensors
+*.pth
+*.pt
+*.ckpt
