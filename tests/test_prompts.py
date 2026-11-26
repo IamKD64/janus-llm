@@ -22,9 +22,12 @@ def test_one_per_label_covers_all(rows, labels):
     assert system.count(" -> ") == len(labels)
 
 
-def test_finetuned_prompt_is_short_and_label_free(labels):
+def test_finetuned_prompt_includes_labels(labels):
     system = PromptBuilder("finetuned", labels).system
-    assert not any(lab in system for lab in labels)
+
+    assert all(label in system for label in labels)
+    assert "exact label" in system
+    assert "no explanation" in system
 
 
 def test_deterministic(rows):
